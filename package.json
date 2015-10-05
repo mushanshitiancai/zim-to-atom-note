@@ -1,4 +1,11 @@
 {
+  "name": "zim-to-atom-note",
+  "version": "0.01",
+  "license" : "MIT",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/mushanshitiancai/zim-to-atom-note.git"
+  },
   "dependencies": {
     "shelljs": "^0.5.3",
     "walk": "^2.3.9"
