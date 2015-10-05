@@ -8,7 +8,20 @@ node main.js srcDir destDir
 ```
 
 ## Note
-### 1. How to cover the link of wiki style?
+### The Definition of note.json
+the file note.json record some information of this atom notebook.
+
+the structure like this:
+
+```
+{
+  "name":"my note book",
+  "author":"tobyn",
+  "format":"atom-note-v0.0.1"
+}
+```
+
+### How to cover the link of wiki style?
 the define of zim style link [Zim - link](http://zim-wiki.org/manual/Help/Links.html)
 
 ```

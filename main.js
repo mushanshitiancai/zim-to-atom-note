@@ -9,12 +9,31 @@ var fs   = require("fs");
 if(process.argv[2] && process.argv[3]){
   var srcDir = path.normalize(process.argv[2]);
   var destDir = path.normalize(process.argv[3]);
-  cover(srcDir,destDir);
+
+  try {
+    fs.statSync(destDir);
+    console.log('destDir is existed!');
+    process.exit();
+  } catch (e) {
+  }
+
+  process.stdin.resume();
+  process.stdout.write('input the note name: ');
+  process.stdin.once('data',function(data){
+    var noteName = data.toString().trim();
+    process.stdout.write('input the author name: ');
+    process.stdin.once('data',function (data) {
+      process.stdin.pause();
+      var author = data.toString().trim();
+
+      cover(srcDir,destDir,noteName,author);
+    })
+  });
 }else{
   console.log("Usage: node main.js srcDir destDir");
 }
 
-function cover(srcDir,destDir){
+function cover(srcDir,destDir,noteName,author){
   try {
     fs.statSync(destDir);
     console.log('destDir is existed!');
@@ -22,6 +41,9 @@ function cover(srcDir,destDir){
   } catch (e) {
     cp('-R',srcDir+'/*',destDir);
   }
+
+  // create a json file in the root of note folder
+  createNoteJson(destDir,noteName,author);
 
   var walker = walk.walk(destDir,{"filters":['.zim','.git','notebook.zim']});
   walker.on('file',function(root,fileStats,next){
@@ -64,4 +86,13 @@ function coverFile(content){
   content = content.replace(/^(\s*)\[[ x]\]/mg,'$1- [ ]');
   content = content.replace(/^(\s*)\[\*\]/mg,'$1- [x]');
   return content;
+}
+
+function createNoteJson(folderPath,noteName,author){
+  var jsonData = {
+    "name"   : noteName,
+    "author" : author,
+    "format" : "atom-note-v0.01"
+  };
+  fs.writeFileSync(path.join(folderPath,'note.json'),JSON.stringify(jsonData,null,2));
 }
