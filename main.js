@@ -40,6 +40,11 @@ function cover(srcDir,destDir,noteName,author){
     process.exit();
   } catch (e) {
     cp('-R',srcDir+'/*',destDir);
+
+    var zimFilePath = path.join(destDir,'notebook.zim');
+    ifExistedThenDo(zimFilePath,function(){
+      rm(zimFilePath);
+    });
   }
 
   // create a json file in the root of note folder
@@ -95,4 +100,12 @@ function createNoteJson(folderPath,noteName,author){
     "format" : "atom-note-v0.01"
   };
   fs.writeFileSync(path.join(folderPath,'note.json'),JSON.stringify(jsonData,null,2));
+}
+
+function ifExistedThenDo(path,callback){
+  try {
+    var stats = fs.statSync(path);
+    callback(stats);
+  } catch (e) {
+  }
 }
